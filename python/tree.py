@@ -12,6 +12,9 @@ class Node:
         self.right = None
         self.color = None
 
+    def __str__(self):
+        return '<%d>' % self.value
+
     def height(self):
         return max(
             self.left.height() + 1 if self.left else 1,
@@ -90,7 +93,15 @@ class BinaryTree:
         pass
 
     def traverse_in_order(self):
-        pass
+        nodes = []
+        def _traverse(node):
+            if not node:
+                return
+            _traverse(node.left)
+            nodes.append(node)
+            _traverse(node.right)
+        _traverse(self.root)
+        return nodes
 
 
 COLORS = {
@@ -102,11 +113,11 @@ COLORS = {
 class RedBlackTree(BinaryTree):
     """Red-Black tree"""
 
-    def __init__(self, arg):
-        super(RedBlackTree, self).__init__()
+    def __init__(self):
+        self.root = None
 
     def insert(self, value, node=None):
-        self.root = self._insert(self, value, self.root)
+        self.root = self._insert(value, self.root)
         self.root.color = COLORS['RED']
         return self.root
 
@@ -120,7 +131,7 @@ class RedBlackTree(BinaryTree):
 
         if value <= node.value:
             node.left = self._insert(value, node.left)
-        elif value > node.value:
+        else:
             node.right = self._insert(value, node.right)
 
         if node.right and node.right.color == COLORS['RED'] and \
@@ -139,10 +150,36 @@ class RedBlackTree(BinaryTree):
         return insertion_root
 
     def _left_rotate(self, node):
-        pass
+        """
+            x
+           / \
+          a   y
+             / \
+            b   c
+        """
+        y = node.right
+        if y:
+            node.right = y.left
+            y.left = node
+            y.color = node.color
+            node.color = COLORS['RED']
+        return y
 
     def _right_rotate(self, node):
-        pass
+        """
+            y
+           / \
+          x   c
+         / \
+        a   b
+        """
+        x = node.left
+        if x:
+            node.left = x.right
+            x.right = node
+            x.color = node.color
+            node.color = COLORS['RED']
+        return x
 
     def successor(self, node):
         pass
@@ -156,8 +193,6 @@ class RedBlackTree(BinaryTree):
 
         # left red, right red
         # flip colors of both
-
-        return insertion_root
 
 
 class Test(unittest.TestCase):
@@ -180,7 +215,19 @@ class Test(unittest.TestCase):
         self.assertEqual(t.maximum(), 42)
 
     def test_red_black_tree(self):
-        self.assertTrue(True)
+        t = RedBlackTree()
+        for r in self.TEST_LIST:
+            t.insert(r)
+
+        print(t.height())
+        self.assertEqual(t.minimum(), 1)
+        self.assertEqual(t.maximum(), 42)
 
 
 unittest.main(verbosity=2)
+
+# t = RedBlackTree()
+# for r in Test.TEST_LIST:
+#     t.insert(r)
+# print([str(i) for i in t.traverse_in_order()])
+# print(t.maximum())
