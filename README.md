@@ -7,12 +7,17 @@ Some practice with algorithms, data structures, and problem solving in python an
 * Linked List
     - [python](python/lists.py)
     - [js](js/List.js)
-* Stack/Queue
-    - [python queue](python/queue.py), [python stack](python/stack.py)
+* Stack
+    - [python stack](python/stack.py)
     - [js](js/Stack.js)
+    - [elixir](elixir/libs/stack.ex),
+* Queue
+    - [python queue](python/queue.py)
+    - [elixir](elixir/libs/queue.ex)
 * Trees
     - [python](python/tree.py)
     - [js](js/Tree.js), [js red-black](js/RedBlackTree.js)
+    - [elixir](elixir/libs/tree.ex)
 * Hash Table
     - [js](js/HashTable.js)
 * Heap
@@ -46,3 +51,4 @@ Problem sets
 
 * [Interviewcake](python/interviewcake)
 * [Hackerrank](python/hackerrank)
+* [Leetcode](python/leetcode)

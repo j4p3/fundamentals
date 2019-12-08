@@ -80,7 +80,7 @@ class RBTree {
     const nodes = [];
 
     if (this._root) {
-      queue.push(this._root);
+      queue.append(this._root);
     } else {
       nodes.push[null];
     }
