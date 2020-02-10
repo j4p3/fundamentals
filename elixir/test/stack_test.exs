@@ -12,12 +12,12 @@ defmodule StackTest do
   end
 
   test "pop" do
-    { _, stack} = Stack.new() |> Stack.push(1) |> Stack.pop
+    {_, stack} = Stack.new() |> Stack.push(1) |> Stack.pop()
     assert Stack.depth(stack) == 0
   end
 
   test "item order" do
-      { top, _} = Stack.new() |> Stack.push(1) |> Stack.push(2) |> Stack.pop
-      assert top = 2
+    {top, _} = Stack.new() |> Stack.push(1) |> Stack.push(2) |> Stack.pop()
+    assert top == 2
   end
 end

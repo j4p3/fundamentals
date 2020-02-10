@@ -12,12 +12,12 @@ defmodule QueueTest do
   end
 
   test "pop" do
-    {_, queue} = Queue.new() |> Queue.push(1) |> Queue.pop
+    {_, queue} = Queue.new() |> Queue.push(1) |> Queue.pop()
     assert Queue.depth(queue) == 0
   end
 
   test "item order" do
-      {top, _} = Queue.new() |> Queue.push(1) |> Queue.push(2) |> Queue.pop
-      assert top == 1
+    {top, _} = Queue.new() |> Queue.push(1) |> Queue.push(2) |> Queue.pop()
+    assert top == 1
   end
 end
