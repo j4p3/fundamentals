@@ -1,3 +1,4 @@
 {
-    "elixir.projectPath": "implementations"
+    "elixir.projectPath": "elixir",
+    "elixirLS.projectDir": "elixir"
 }

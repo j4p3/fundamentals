@@ -22,7 +22,7 @@ defmodule ElixirImplementations.RBTree do
       # rrotate
     end
 
-    if (left.color == :red and right.color == :red) do
+    if left.color == :red and right.color == :red do
       # flip
     end
   end
