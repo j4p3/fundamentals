@@ -30,5 +30,31 @@ defmodule RecursionOptimized do
     defp add(sum, [head | tail]) do
       add(sum + head, tail)
     end
+
+    @spec len([any]) :: integer
+    def len(list) do
+      len(0, list)
+    end
+
+    @spec len(integer, [any]) :: integer
+    defp len(num, []), do: num
+
+    defp len(num, [_ | tail]) do
+      len(num + 1, tail)
+    end
+
+    def positive_elements(list) do
+      positive_elements([], list)
+    end
+
+    defp positive_elements([results], []), do: List.flatten(results)
+
+    defp positive_elements(results, [head | tail]) do
+      if head > 0 do
+        positive_elements([head | results], tail)
+      else
+        positive_elements([results], tail)
+      end
+    end
   end
 end
