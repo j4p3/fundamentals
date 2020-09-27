@@ -13,6 +13,12 @@ defmodule Files do
     |> Enum.filter(&(String.length(&1) > @line_width))
   end
 
+  def words_per_line(path) do
+    File.stream!(path)
+    |> Stream.map(&(String.replace&1, "\n", ""))
+    |> Enum.map(&(length(String.split(&1))))
+  end
+
   def longest_line(path) do
     File.stream!(path)
     |> Stream.map(&(String.replace&1, "\n", ""))

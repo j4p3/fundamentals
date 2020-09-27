@@ -17,4 +17,14 @@ defmodule Math do
       false -> b
     end
   end
+
+  def distribution(list) do
+    distribution(list, %{})
+  end
+  defp distribution([head | tail], results) do
+    distribution(tail, Map.put(results, head, (results[head] || 1) + 1))
+  end
+  defp distribution([], results) do
+    results
+  end
 end
