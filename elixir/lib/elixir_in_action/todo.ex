@@ -49,6 +49,11 @@ defmodule Todo do
     end
   end
 
+  def delete(todos, id) do
+    {_, updated} = Map.pop(todos.entries, id)
+    %Todo{todos | entries: updated}
+  end
+
   def entries(todos, date) do
     todos.entries
     |> Stream.filter(fn {_, entry} -> entry.date == date end)
