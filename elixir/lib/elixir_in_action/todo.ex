@@ -1,12 +1,27 @@
 defmodule Todo do
   require MultiMap
+  defstruct id_sequence: 1, entries: %{}
+
   @type todo_list :: %{}
   @type entry :: %{date: Date, message: charlist}
-  @spec new :: %{}
-  def new, do: MultiMap.new()
 
-  @spec add(todo_list, entry) :: todo_list
-  def add(todos, entry), do: MultiMap.insert(todos, entry.date, entry)
+  def new, do: %Todo{}
+
+  def add(todos, entry) do
+    entry = Map.put(entry, :id, todos.id_sequence)
+
+    entries = Map.put(
+      todos.entries,
+      todos.id_sequence,
+      entry
+    )
+
+    %Todo{
+      todos |
+      entries: entries,
+      id_sequence: todos.id_sequence
+    }
+  end
 
   @spec entries(todo_list, tuple) :: list
   def entries(todos, date), do: MultiMap.get(todos, date)
