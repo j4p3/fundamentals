@@ -7,22 +7,51 @@ defmodule Todo do
 
   def new, do: %Todo{}
 
-  def add(todos, entry) do
+  def create(todos, entry) do
     entry = Map.put(entry, :id, todos.id_sequence)
 
-    entries = Map.put(
-      todos.entries,
-      todos.id_sequence,
-      entry
-    )
+    entries =
+      Map.put(
+        todos.entries,
+        todos.id_sequence,
+        entry
+      )
 
     %Todo{
-      todos |
-      entries: entries,
-      id_sequence: todos.id_sequence
+      todos
+      | entries: entries,
+        id_sequence: todos.id_sequence + 1
     }
   end
 
-  @spec entries(todo_list, tuple) :: list
-  def entries(todos, date), do: MultiMap.get(todos, date)
+  def update(todos, id, update_body) do
+    case Map.fetch(todos.entries, id) do
+      :error ->
+        todos
+
+      {:ok, existing_entry} ->
+        new_entry = Enum.reduce(
+          update_body,
+          existing_entry,
+          fn {k, v}, acc ->
+            %{acc | k => v}
+          end
+        )
+
+        entries =
+          Map.put(
+            todos.entries,
+            new_entry.id,
+            new_entry
+          )
+
+        %Todo{todos | entries: entries}
+    end
+  end
+
+  def entries(todos, date) do
+    todos.entries
+    |> Stream.filter(fn {_, entry} -> entry.date == date end)
+    |> Enum.map(fn {_, entry} -> entry end)
+  end
 end
