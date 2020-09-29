@@ -7,6 +7,10 @@ defmodule Todo do
 
   def new, do: %Todo{}
 
+  def new(entry_data) do
+    Enum.reduce(entry_data, %Todo{}, &create(&2, &1))
+  end
+
   def create(todos, entry) do
     entry = Map.put(entry, :id, todos.id_sequence)
 
@@ -30,13 +34,14 @@ defmodule Todo do
         todos
 
       {:ok, existing_entry} ->
-        new_entry = Enum.reduce(
-          update_body,
-          existing_entry,
-          fn {k, v}, acc ->
-            %{acc | k => v}
-          end
-        )
+        new_entry =
+          Enum.reduce(
+            update_body,
+            existing_entry,
+            fn {k, v}, acc ->
+              %{acc | k => v}
+            end
+          )
 
         entries =
           Map.put(
@@ -58,5 +63,28 @@ defmodule Todo do
     todos.entries
     |> Stream.filter(fn {_, entry} -> entry.date == date end)
     |> Enum.map(fn {_, entry} -> entry end)
+  end
+end
+
+defmodule Todo.CsvImport do
+  def import(path) do
+    entries = File.stream!(path)
+    |> Enum.map(&String.replace(&1, "\n", ""))
+    |> IO.inspect()
+    |> Enum.map(&String.split(&1, ","))
+    |> IO.inspect()
+    |> Enum.map(fn [date, message] ->
+      [year, month, day] = Enum.map(String.split(date, "/"), &String.to_integer/1)
+      {{year, month, day}, message}
+    end)
+    |> IO.inspect()
+    |> Enum.map(fn {{year, month, day}, message} ->
+      %{
+        date: "~D[#{year}-#{month}-#{day}",
+        message: message
+      }
+    end)
+
+    Todo.new(entries)
   end
 end
