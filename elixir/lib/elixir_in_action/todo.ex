@@ -1,5 +1,4 @@
 defmodule Todo do
-  require MultiMap
   defstruct id_sequence: 1, entries: %{}
 
   @type todo_list :: %{}
@@ -83,5 +82,11 @@ defmodule Todo.CsvImport do
     end)
 
     Todo.new(entries)
+  end
+end
+
+defimpl String.Chars, for: Todo do
+  def to_string(_) do
+    "#Todo"
   end
 end
