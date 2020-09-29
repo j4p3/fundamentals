@@ -69,9 +69,9 @@ end
 defmodule Todo.CsvImport do
   def import(path) do
     entries = File.stream!(path)
-    |> Enum.map(&String.replace(&1, "\n", ""))
-    |> Enum.map(&String.split(&1, ","))
-    |> Enum.map(fn [date, message] ->
+    |> Stream.map(&String.replace(&1, "\n", ""))
+    |> Stream.map(&String.split(&1, ","))
+    |> Stream.map(fn [date, message] ->
       [year, month, day] = Enum.map(String.split(date, "/"), &String.to_integer/1)
       {{year, month, day}, message}
     end)
