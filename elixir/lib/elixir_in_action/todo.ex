@@ -1,3 +1,39 @@
+
+# Step 2: build a "stateful" abstraction atop a functional data structure
+defmodule TodoServer do
+  def start() do
+    spawn(fn -> loop(Todo.new()) end)
+  end
+
+  def create(server_pid, todo), do: send(server_pid, {:create, todo})
+  def update(server_pid, todo_id, todo), do: send(server_pid, {:update, todo_id, todo})
+  def delete(server_pid, todo_id), do: send(server_pid, {:delete, todo_id})
+  def entries(server_pid, date) do
+    send(server_pid, {:entries, self(), date})
+    receive do
+      {:entries_response, entries} -> entries
+    after
+      5000 -> {:error, :timeout}
+    end
+  end
+
+  defp loop(state) do
+    new_state = receive do
+      message -> process_message(state, message)
+    end
+    loop(new_state)
+  end
+
+  defp process_message(todo_list, {:create, entry}), do: Todo.create(todo_list, entry)
+  defp process_message(todo_list, {:update, entry_id, entry}), do: Todo.update(todo_list, entry_id, entry)
+  defp process_message(todo_list, {:delete, entry_id}), do: Todo.delete(todo_list, entry_id)
+  defp process_message(todo_list, {:entries, caller, date}) do
+    send(caller, {:entries_response, Todo.entries(todo_list, date)})
+    todo_list  # ensure process_message returns list data so it can be preserved to next loop
+  end
+end
+
+# Step 1: build a functional data structure
 defmodule Todo do
   defstruct id_sequence: 1, entries: %{}
 
