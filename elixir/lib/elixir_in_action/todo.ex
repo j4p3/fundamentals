@@ -2,14 +2,14 @@
 # Step 2: build a "stateful" abstraction atop a functional data structure
 defmodule TodoServer do
   def start() do
-    spawn(fn -> loop(Todo.new()) end)
+    Process.register(spawn(fn -> loop(Todo.new()) end), :todo_server)
   end
 
-  def create(server_pid, todo), do: send(server_pid, {:create, todo})
-  def update(server_pid, todo_id, todo), do: send(server_pid, {:update, todo_id, todo})
-  def delete(server_pid, todo_id), do: send(server_pid, {:delete, todo_id})
-  def entries(server_pid, date) do
-    send(server_pid, {:entries, self(), date})
+  def create(todo), do: send(:todo_server, {:create, todo})
+  def update(todo_id, todo), do: send(:todo_server, {:update, todo_id, todo})
+  def delete(todo_id), do: send(:todo_server, {:delete, todo_id})
+  def entries(date) do
+    send(:todo_server, {:entries, self(), date})
     receive do
       {:entries_response, entries} -> entries
     after
