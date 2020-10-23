@@ -23,8 +23,7 @@ defmodule KeyValueStoreGenserver do
     {:noreply, Map.put(state, key, value)}
   end
 
-  @spec start :: :ignore | {:error, any} | {:ok, pid}
-  def start do
+  def start_link() do
     GenServer.start(__MODULE__, nil, name: __MODULE__)
   end
 
@@ -35,6 +34,6 @@ defmodule KeyValueStoreGenserver do
 
   @spec get(any) :: any
   def get(key) do
-    GenServer.call(KeyValueStore, {:get, key})
+    GenServer.call(__MODULE__, {:get, key})
   end
 end
