@@ -1,4 +1,5 @@
 {
     "elixir.projectPath": "elixir",
-    "elixirLS.projectDir": "elixir"
+    "elixirLS.projectDir": "elixir",
+    "python.formatting.provider": "black"
 }

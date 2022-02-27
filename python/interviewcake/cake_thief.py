@@ -1,42 +1,66 @@
 import unittest
 
 
-def max_duffel_bag_value(cake_tuples, weight_capacity):
-    """The knapsack problem!
+# def max_duffel_bag_value(cake_tuples, weight_capacity):
+#     """The knapsack problem!
 
-    Strategies:
-    * build every possibility and take max value
-        problem: path-dependent, not the efficient solution
-    * fill with max value cakes (or max value per weight)
-    * build max value ... hash? list? list of lists?
-    * how to dictate swapping out? take max value of remainder?
-    * build max value for n up to capacity
-    * take max value up until each pivot point
-    * but we need to do this remainder trick for each value, for each cake
-    """
-    max_value = [0] * (weight_capacity + 1)
-    for cake in cake_tuples:
-        if cake[0] == 0:
-            # avoid divide by zero
-            if cake[1]:
-                return float('inf')
-            else:
-                continue
-        # print('analyzing cake %s' % str(cake))
-        for weight in range(cake[0], len(max_value)):
-            base_value = (weight // cake[0]) * cake[1]
-            remainder_value = max_value[weight % cake[0]]
-            # print('##%d\n\tbase: %d\n\tremainder: %d\n\tcurrent: %d' % (
-            #     weight,
-            #     base_value,
-            #     remainder_value,
-            #     max_value[weight]
-            #     ))
-            if base_value + remainder_value > max_value[weight]:
-                max_value[weight] = base_value + remainder_value
+#     Strategies:
+#     * build every possibility and take max value
+#         problem: path-dependent, not the efficient solution
+#     * fill with max value cakes (or max value per weight)
+#     * build max value ... hash? list? list of lists?
+#     * how to dictate swapping out? take max value of remainder?
+#     * build max value for n up to capacity
+#     * take max value up until each pivot point
+#     * but we need to do this remainder trick for each value, for each cake
+#     """
+#     max_value = [0] * (weight_capacity + 1)
+#     for cake in cake_tuples:
+#         if cake[0] == 0:
+#             # avoid divide by zero
+#             if cake[1]:
+#                 return float('inf')
+#             else:
+#                 continue
+#         print('analyzing cake %s' % str(cake))
+#         for weight in range(cake[0], len(max_value)):
+#             base_value = (weight // cake[0]) * cake[1]
+#             remainder_value = max_value[weight % cake[0]]
+#             print('##%d\n\tbase: %d\n\tremainder: %d\n\tcurrent: %d' % (
+#                 weight,
+#                 base_value,
+#                 remainder_value,
+#                 max_value[weight]
+#                 ))
+#             if base_value + remainder_value > max_value[weight]:
+#                 max_value[weight] = base_value + remainder_value
 
-    # print(max_value)
-    return max_value[weight_capacity]
+#     # print(max_value)
+#     return max_value[weight_capacity]
+
+def max_duffel_bag_value(cakes, capacity):
+    if capacity == 0:
+        return 0
+
+    haul = [0] * (capacity + 1)
+
+    # @todo: handle divisible capacities, discard less value-dense
+
+    for (weight, value) in cakes:
+        if value == 0:
+            pass
+        elif weight == 0:
+            return float('inf')
+
+        if weight < capacity:
+            haul[weight] = value
+
+    for i in range(capacity + 1):
+        for (weight, value) in cakes:
+            if i - weight > 0 and haul[i - weight] + value > haul[i]:
+                haul[i] =  haul[i - weight] + value
+    
+    return haul[-1]
 
 # Tests
 class Test(unittest.TestCase):
