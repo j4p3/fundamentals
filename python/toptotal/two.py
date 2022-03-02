@@ -2,7 +2,7 @@ def solution(p, s):
     people = sum(p)
     min_cars = [0] + [float('inf')] * (people)
 
-    for seating in range(max(s)):
+    for seating in range(max(s) + 1):
         min_cars[seating] = 1
 
     for i in range(people + 1):
